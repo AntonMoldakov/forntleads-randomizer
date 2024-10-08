@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Список разработчиков</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .buttons {
+        margin-bottom: 20px;
+      }
+
+      .button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        background-color: #3e8e41;
+      }
+
+      .random-button {
+        background-color: #03a9f4;
+        color: #fff;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .random-button:hover {
+        background-color: #0288d1;
+      }
+
+      .list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .list-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .list-item:last-child {
+        border-bottom: none;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .random-result {
+        font-size: 24px;
+        font-weight: bold;
+        color: #666;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="buttons">
+        <button class="button" id="all-button">Все</button>
+        <button class="button" id="web-button">Веб</button>
+        <button class="button" id="mobile-button">Мобильщики</button>
+        <button class="button" id="react-native-button">React Native</button>
+        <button class="button" id="flutter-button">Flutter</button>
+      </div>
+      <button class="random-button" id="random-button">Выбрать случайно</button>
+      <div id="random-result" class="random-result"></div>
+      <ul class="list" id="developers-list">
+        <!-- Список разработчиков будет генерироваться здесь -->
+      </ul>
+    </div>
+
+    <script>
+      const developers = [
+        { name: 'Артур Борисов', categories: ['flutter', 'mobile'] },
+        {
+          name: 'Вова Парамонов',
+          categories: ['web', 'mobile', 'react-native'],
+        },
+        { name: 'Сергей Максименко', categories: ['web'] },
+        { name: 'Андрей Маркушин', categories: ['web'] },
+        { name: 'Вова Кейль', categories: ['web'] },
+        { name: 'Леонид Каштанов', categories: ['web'] },
+        { name: 'Александр Смолянинов', categories: ['web'] },
+        {
+          name: 'Молдаков Алексей',
+          categories: ['mobile', 'react-native', 'flutter'],
+        },
+        {
+          name: 'Антон Бревнов',
+          categories: ['mobile', 'react-native', 'web'],
+        },
+        { name: 'Денис Никулин', categories: ['web'] },
+      ];
+
+      const buttons = document.querySelectorAll('.button');
+      const list = document.getElementById('developers-list');
+      const randomButton = document.getElementById('random-button');
+      const randomResult = document.getElementById('random-result');
+
+      developers.forEach((developer) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `<span class="name">${developer.name}</span>`;
+        listItem.dataset.categories = developer.categories.join(',');
+        list.appendChild(listItem);
+      });
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const category = button.id.replace('-button', '');
+          const listItems = list.children;
+
+          randomResult.textContent = '';
+
+          Array.prototype.forEach.call(listItems, (listItem) => {
+            const categories = listItem.dataset.categories.split(',');
+            if (category === 'all' || categories.includes(category)) {
+              listItem.classList.remove('hidden');
+            } else {
+              listItem.classList.add('hidden');
+            }
+          });
+        });
+      });
+
+      randomButton.addEventListener('click', () => {
+        const visibleListItems = Array.prototype.filter.call(
+          list.children,
+          (listItem) => !listItem.classList.contains('hidden')
+        );
+        const randomIndex = Math.floor(Math.random() * visibleListItems.length);
+        const randomListItem = visibleListItems[randomIndex];
+        const randomName = randomListItem.querySelector('.name').textContent;
+        randomResult.textContent = `Случайно выбран: ${randomName}`;
+      });
+    </script>
+  </body>
+</html>
